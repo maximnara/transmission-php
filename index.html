@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Transmission PHP : PHP Transmission API client" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Transmission PHP</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/kleiram/transmission-php">View on GitHub</a>
+
+          <h1 id="project_title">Transmission PHP</h1>
+          <h2 id="project_tagline">PHP Transmission API client</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/kleiram/transmission-php/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/kleiram/transmission-php/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="php-transmission-api" class="anchor" href="#php-transmission-api"><span class="octicon octicon-link"></span></a>PHP Transmission API</h1>
+
+<p>This library provides an interface to the <a href="http://transmissionbt.com">Transmission</a>
+bit-torrent downloader. It provides means to get and remove torrents from
+the downloader as well as adding new torrents to the download queue.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Installation is easy using <a href="https://getcomposer.org">Composer</a>:</p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+    <span class="nt">"require"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">"kleiram/transmission-php"</span><span class="p">:</span> <span class="s2">"dev-master"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Using the library is as easy as installing it:</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="k">use</span> <span class="nx">Transmission\Transmission</span><span class="p">;</span>
+
+<span class="nv">$transmission</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Transmission</span><span class="p">();</span>
+
+<span class="c1">// Getting all the torrents currently in the download queue</span>
+<span class="nv">$torrents</span> <span class="o">=</span> <span class="nv">$transmission</span><span class="o">-&gt;</span><span class="na">all</span><span class="p">();</span>
+
+<span class="c1">// Getting a specific torrent from the download queue</span>
+<span class="nv">$torrent</span> <span class="o">=</span> <span class="nv">$transmission</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="c1">// (you can also get a torrent by the hash of the torrent)</span>
+<span class="nv">$torrent</span> <span class="o">=</span> <span class="nv">$transmission</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="cm">/* torrent hash */</span><span class="p">);</span>
+
+<span class="c1">// Adding a torrent to the download queue</span>
+<span class="nv">$torrent</span> <span class="o">=</span> <span class="nv">$transmission</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="cm">/* path to torrent */</span><span class="p">);</span>
+
+<span class="c1">// Removing a torrent from the download queue</span>
+<span class="nv">$torrent</span> <span class="o">=</span> <span class="nv">$transmission</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="nv">$torrent</span><span class="o">-&gt;</span><span class="na">remove</span><span class="p">();</span>
+
+<span class="c1">// Or if you want to delete all local data too</span>
+<span class="nv">$torrent</span><span class="o">-&gt;</span><span class="na">remove</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+
+<span class="c1">// You can also get the Trackers that the torrent currently uses</span>
+<span class="c1">// These are instances of the Transmission\Model\Tracker class</span>
+<span class="nv">$trackers</span> <span class="o">=</span> <span class="nv">$torrent</span><span class="o">-&gt;</span><span class="na">getTrackers</span><span class="p">();</span>
+
+<span class="c1">// Getting the files downloaded by the torrent are available too</span>
+<span class="c1">// These are instances of Transmission\Model\File</span>
+<span class="nv">$files</span> <span class="o">=</span> <span class="nv">$torrent</span><span class="o">-&gt;</span><span class="na">getFiles</span><span class="p">();</span>
+
+<span class="c1">// You can start, stop, verify the torrent and ask the tracker for</span>
+<span class="c1">// more peers to connect to</span>
+<span class="nv">$torrent</span><span class="o">-&gt;</span><span class="na">stop</span><span class="p">();</span>
+<span class="nv">$torrent</span><span class="o">-&gt;</span><span class="na">start</span><span class="p">();</span>
+<span class="nv">$torrent</span><span class="o">-&gt;</span><span class="na">start</span><span class="p">(</span><span class="k">true</span><span class="p">);</span> <span class="c1">// Pass true if you want to start the torrent immediatly</span>
+<span class="nv">$torrent</span><span class="o">-&gt;</span><span class="na">verify</span><span class="p">();</span>
+<span class="nv">$torrent</span><span class="o">-&gt;</span><span class="na">reannounce</span><span class="p">();</span>
+</pre></div>
+
+<p>To find out which information is contained by the torrent, check
+<a href="https://github.com/kleiram/transmission-php/tree/master/lib/Transmission/Model/Torrent.php"><code>Transmission\Model\Torrent</code></a>.</p>
+
+<p>By default, the library will try to connect to <code>localhost:9091</code>. If you want to
+connect to another host or post you can pass those to the constructor of the
+<code>Transmission</code> class:</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="k">use</span> <span class="nx">Transmission\Transmission</span><span class="p">;</span>
+
+<span class="nv">$transmission</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Transmission</span><span class="p">(</span><span class="s1">'example.com'</span><span class="p">,</span> <span class="mi">33</span><span class="p">);</span>
+
+<span class="nv">$torrents</span> <span class="o">=</span> <span class="nv">$transmission</span><span class="o">-&gt;</span><span class="na">all</span><span class="p">();</span>
+<span class="nv">$torrent</span>  <span class="o">=</span> <span class="nv">$transmission</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="nv">$torrent</span>  <span class="o">=</span> <span class="nv">$transmission</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="cm">/* path to torrent */</span><span class="p">);</span>
+
+<span class="c1">// When you already have a torrent, you don't have to pass the client again</span>
+<span class="nv">$torrent</span><span class="o">-&gt;</span><span class="na">delete</span><span class="p">();</span>
+</pre></div>
+
+<p>It is also possible to pass the torrent data directly instead of using a file
+but the metadata must be base64-encoded:</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="nv">$torrent</span> <span class="o">=</span> <span class="nv">$transmission</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="cm">/* base64-encoded metainfo */</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+</pre></div>
+
+<p>If the Transmission server is secured with a username and password you can
+authenticate using the <code>Client</code> class:</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="k">use</span> <span class="nx">Transmission\Client</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Transmission\Transmission</span><span class="p">;</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Client</span><span class="p">();</span>
+<span class="nv">$client</span><span class="o">-&gt;</span><span class="na">authenticate</span><span class="p">(</span><span class="s1">'username'</span><span class="p">,</span> <span class="s1">'password'</span><span class="p">);</span>
+<span class="nv">$transmission</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Transmission</span><span class="p">();</span>
+<span class="nv">$transmission</span><span class="o">-&gt;</span><span class="na">setClient</span><span class="p">(</span><span class="nv">$client</span><span class="p">);</span>
+</pre></div>
+
+<p>Additionally, you can control the actual Transmission setting. This means
+you can modify the global download limit or change the download directory:</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="k">use</span> <span class="nx">Transmission\Transmission</span><span class="p">;</span>
+
+<span class="nv">$transmission</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Transmission</span><span class="p">();</span>
+<span class="nv">$session</span> <span class="o">=</span> <span class="nv">$transmission</span><span class="o">-&gt;</span><span class="na">getSession</span><span class="p">();</span>
+
+<span class="nv">$session</span><span class="o">-&gt;</span><span class="na">setDownloadDir</span><span class="p">(</span><span class="s1">'/home/foo/downloads/complete'</span><span class="p">);</span>
+<span class="nv">$session</span><span class="o">-&gt;</span><span class="na">setIncompleteDir</span><span class="p">(</span><span class="s1">'/home/foo/downloads/incomplete'</span><span class="p">);</span>
+<span class="nv">$session</span><span class="o">-&gt;</span><span class="na">setIncompleteDirEnabled</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+<span class="nv">$session</span><span class="o">-&gt;</span><span class="na">save</span><span class="p">();</span>
+</pre></div>
+
+<h2>
+<a name="testing" class="anchor" href="#testing"><span class="octicon octicon-link"></span></a>Testing</h2>
+
+<p>Testing is done using <a href="https://github.com/sebastianbergmann/phpunit">PHPUnit</a>. To
+test the application, you have to install the dependencies using Composer before
+running the tests:</p>
+
+<div class="highlight highlight-bash"><pre><span class="nv">$ </span>curl -s https://getcomposer.org/installer | php
+<span class="nv">$ </span>php composer.phar install
+<span class="nv">$ </span>phpunit --coverage-text
+</pre></div>
+
+<h2>
+<a name="changelog" class="anchor" href="#changelog"><span class="octicon octicon-link"></span></a>Changelog</h2>
+
+<pre><code>Version     Changes
+
+0.1.0       - Initial release
+
+0.2.0       - Rewrote the entire public API
+
+0.3.0       - Added support for authentication
+
+0.4.0       - The library now requires at least PHP 5.3.2
+            - Added support for getting files downloaded by torrent
+            - Added support for getting trackers used by a torrent
+            - Added support for getting peers connected to
+            - The torrent now contains:
+                * Whether it is finished
+                * The up- and download rate (in bytes/s)
+                * The size of the download (when completed)
+                * The ETA of the download
+                * The percentage of the download completed
+            - Made the authentication more flexible
+            - The client now sends an User-Agent header with each request
+            - Added support for starting, stopping, veryfing and
+              requesting a reannounce of torrents
+
+0.5.0       - Fix a bug in the authentication/authorization mechanism
+            - A whole lot of other stuff including management of the
+              Transmission session (setting global download speed limit
+              and toggling the speed limit among others).
+</code></pre>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>This library is licensed under the BSD 2-clause license.</p>
+
+<pre><code>Copyright (c) 2013, Ramon Kleiss &lt;ramon@cubilon.n&gt;
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+The views and conclusions contained in the software and documentation are those
+of the authors and should not be interpreted as representing official policies,
+either expressed or implied, of the FreeBSD Project.
+</code></pre>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Transmission PHP maintained by <a href="https://github.com/kleiram">kleiram</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
