@@ -67,17 +67,29 @@ class Transmission
     /**
      * Get a specific torrent from the download queue
      *
-     * @param integer $id
+     * @param array|integer $id
      * @return Transmission\Model\Torrent
      * @throws RuntimeException
      */
-    public function get($id)
+    public function get($id = array())
     {
+	    $param = 'ids';
+	    if (is_numeric($id))
+	    {
+		    $param = 'id';
+	    }
+
+	    if (is_array($id) && count($id) == 1)
+	    {
+		    $param = 'id';
+		    $id = reset($id);
+	    }
+
         $response = $this->getClient()->call(
             'torrent-get',
             array(
-                'fields' => array_keys(Torrent::getMapping()),
-                'ids'    => array($id)
+	            'fields' => array_keys(Torrent::getMapping()),
+	            $param   => $id
             )
         );
 
